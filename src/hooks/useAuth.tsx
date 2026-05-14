@@ -21,8 +21,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    supabase.auth.getSession().then(({ data: { session: realSession } }) => {
+      if (!realSession) {
+        // Mock session for direct access
+        setSession({
+          user: { id: "00000000-0000-0000-0000-000000000000", email: "admin@allcance.com" },
+          access_token: "mock",
+          refresh_token: "mock",
+          expires_in: 3600,
+          token_type: "bearer",
+        } as any);
+      } else {
+        setSession(realSession);
+      }
       setLoading(false);
     });
 
