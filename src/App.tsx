@@ -100,7 +100,7 @@ function AuthGate() {
     );
   }
 
-  // if (!session) return <Login />;
+  if (!session) return <Login />;
 
   return (
     <>

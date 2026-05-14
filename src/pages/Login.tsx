@@ -15,7 +15,7 @@ import {
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type Step = "select" | "password" | "names";
+type Step = "select" | "password" | "names" | "email";
 type StationId = "admin" | "salao" | "mecanica";
 
 interface Station {
@@ -94,7 +94,7 @@ export default function Login() {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   const imageUrl =
-    "https://i.postimg.cc/15gFKyyF/Lona-painel-led-1920-x-1080-px-20260310-164540-0000.png";
+    "https://i.postimg.cc/Fskx40s9/logo-allcance.png";
 
   const handleSelectStation = (s: Station) => {
     setStation(s);
@@ -157,6 +157,27 @@ export default function Login() {
     }
   };
 
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const form = e.target as HTMLFormElement;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const pass = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+      if (error) throw error;
+      localStorage.setItem("station_type", "admin");
+    } catch (err: any) {
+      toast({
+        title: err.message || "Erro na autenticação",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSelectName = async (name: string) => {
     if (!pendingSession) return;
     localStorage.setItem("station_type", "salao");
@@ -175,19 +196,24 @@ export default function Login() {
           onLoad={() => setImgLoaded(true)}
         />
         <div
-          className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
-            imgLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
-          }`}
-          style={{ backgroundImage: `url(${imageUrl})` }}
+          className={`absolute inset-0 bg-zinc-950 transition-all duration-1000`}
         />
-        <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-transparent via-background/30 to-background/70" />
-
-        {/* Desktop branding */}
-        <div className="hidden lg:flex absolute bottom-12 left-12 flex-col gap-3">
-          <img src="/allcance-logo.png" alt="Allcance" className="h-12 w-auto object-contain brightness-200" />
-          <p className="text-muted-foreground font-medium max-w-xs">
-            Performance e precisão para quem não aceita menos que o topo.
-          </p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-12 gap-8">
+          <img 
+            src={imageUrl} 
+            alt="Allcance Service" 
+            className={`w-full max-w-sm object-contain transition-all duration-1000 ${
+              imgLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            }`}
+          />
+          <div className={`transition-all duration-1000 delay-300 ${imgLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <h2 className="text-4xl font-black text-white tracking-[0.3em] uppercase">
+              Allcance
+            </h2>
+            <p className="text-zinc-500 font-bold tracking-[0.5em] uppercase text-center mt-2">
+              Service
+            </p>
+          </div>
         </div>
       </div>
 
@@ -229,7 +255,67 @@ export default function Login() {
                     <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-foreground transition-colors shrink-0" />
                   </button>
                 ))}
+
+                <div className="pt-4 border-t border-border/50">
+                  <button
+                    onClick={() => setStep("email")}
+                    className="w-full flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    Entrar com E-mail e Senha
+                  </button>
+                </div>
               </div>
+            </>
+          )}
+
+          {/* ── STEP: Email Login ── */}
+          {step === "email" && (
+            <>
+              <div className="space-y-3">
+                <button
+                  onClick={() => setStep("select")}
+                  className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Voltar para Estações
+                </button>
+                <h1 className="text-xl font-black text-foreground tracking-tight">
+                  Login por E-mail
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  Acesse sua conta de administrador ou colaborador.
+                </p>
+              </div>
+
+              <form onSubmit={handleEmailLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                    E-mail
+                  </label>
+                  <InputEl
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="seu@email.com"
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
+                    Senha
+                  </label>
+                  <InputEl
+                    name="password"
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                  />
+                </div>
+                <Btn type="submit" className="w-full h-14" disabled={loading}>
+                  {loading ? <Loader2 className="animate-spin" /> : "Entrar na Conta"}
+                </Btn>
+              </form>
             </>
           )}
 
