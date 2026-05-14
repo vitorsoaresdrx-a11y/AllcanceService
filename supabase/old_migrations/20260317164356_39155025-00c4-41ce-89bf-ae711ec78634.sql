@@ -1,0 +1,1 @@
+select cron.unschedule('whatsapp-health-check');

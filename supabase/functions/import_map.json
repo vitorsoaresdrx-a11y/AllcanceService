@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "https://esm.sh/mercadopago": "https://esm.sh/mercadopago@2.1.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.8",
+    "std/http/server": "https://deno.land/std@0.177.0/http/server.ts"
+  }
+}

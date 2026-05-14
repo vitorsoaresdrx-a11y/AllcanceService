@@ -1,0 +1,1 @@
+﻿CREATE TABLE IF NOT EXISTS os_adicionais (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), os_id UUID REFERENCES mechanic_jobs(id) ON DELETE CASCADE, pecas JSONB, observacoes TEXT, valor_total DECIMAL(12,2), status TEXT DEFAULT 'pendente', criado_em TIMESTAMPTZ DEFAULT now());

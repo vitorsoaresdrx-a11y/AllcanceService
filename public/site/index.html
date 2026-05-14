@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Allcance — Sistema de IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #181818;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0ede8;
+  --muted: #6b6b6b;
+  --accent: #e8f060;
+  --accent2: #60e8c0;
+  --accent3: #e86060;
+  --accent4: #6094e8;
+  --accent5: #e8a060;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 2rem 3rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40%;left:-20%;width:70%;height:140%;background:radial-gradient(ellipse at center,rgba(232,240,96,0.04) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.015) 39px,rgba(255,255,255,0.015) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.015) 39px,rgba(255,255,255,0.015) 40px);pointer-events:none}
+.hero-inner{max-width:900px;margin:0 auto;width:100%;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:.5rem;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:.5px solid var(--border2);border-radius:100px;padding:.35rem 1rem;margin-bottom:2.5rem}
+.hero-tag span{width:6px;height:6px;border-radius:50%;background:var(--accent);display:block;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;line-height:1.0;letter-spacing:-.03em;margin-bottom:1.5rem}
+h1 em{font-style:normal;color:var(--accent)}
+.hero-desc{font-size:1.05rem;color:var(--muted);max-width:520px;font-weight:300;margin-bottom:3rem;line-height:1.75}
+.hero-stats{display:flex;flex-wrap:wrap;gap:2.5rem}
+.stat{display:flex;flex-direction:column;gap:.2rem}
+.stat-n{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--text);letter-spacing:-.04em}
+.stat-l{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+
+/* SECTIONS */
+.section{padding:5rem 2rem;border-top:.5px solid var(--border)}
+.inner{max-width:900px;margin:0 auto}
+.sec-header{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:3rem}
+.sec-num{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.08em}
+h2{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:-.02em}
+
+/* FLOW CHAIN */
+.chain{display:flex;flex-wrap:wrap;gap:0;align-items:stretch;margin-bottom:2rem}
+.chain-item{flex:1;min-width:140px}
+.chain-node{background:var(--surface);border:.5px solid var(--border2);border-radius:10px;padding:1rem 1.1rem;height:100%;transition:border-color .2s}
+.chain-node:hover{border-color:rgba(255,255,255,0.25)}
+.chain-node .icon{font-size:1.2rem;margin-bottom:.5rem;display:block}
+.chain-node .cn-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.3rem;color:var(--text)}
+.chain-node .cn-sub{font-size:12px;color:var(--muted);line-height:1.5}
+.chain-arrow{display:flex;align-items:center;padding:0 6px;color:var(--border2);font-size:1.2rem;flex-shrink:0;align-self:center}
+
+/* CARDS GRID */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.75rem}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem}
+.card{background:var(--surface);border:.5px solid var(--border2);border-radius:12px;padding:1.25rem 1.35rem}
+.card-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-y{background:var(--accent)}
+.dot-g{background:var(--accent2)}
+.dot-r{background:var(--accent3)}
+.dot-b{background:var(--accent4)}
+.dot-o{background:var(--accent5)}
+.dot-m{background:var(--muted)}
+.card-head h3{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:-.01em}
+.row{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
+.row:last-child{margin-bottom:0}
+.row .dot{margin-top:5px}
+.row p{font-size:12.5px;color:var(--muted);line-height:1.55}
+
+/* KANBAN */
+.kanban{display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.5rem;-webkit-overflow-scrolling:touch}
+.kanban::-webkit-scrollbar{height:3px}
+.kanban::-webkit-scrollbar-track{background:transparent}
+.kanban::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.kcol{flex-shrink:0;width:155px}
+.kcol-head{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.5rem .7rem;border-radius:8px 8px 0 0;border:.5px solid;border-bottom:none}
+.kh-a{color:var(--accent);background:rgba(232,240,96,.06);border-color:rgba(232,240,96,.2)}
+.kh-m{color:#a78bfa;background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2)}
+.kh-an{color:var(--accent2);background:rgba(96,232,192,.06);border-color:rgba(96,232,192,.2)}
+.kh-p{color:var(--accent4);background:rgba(96,148,232,.06);border-color:rgba(96,148,232,.2)}
+.kcol-body{background:var(--surface);border:.5px solid var(--border2);border-top:none;border-radius:0 0 8px 8px;padding:.5rem;min-height:80px}
+.kcard{background:var(--surface2);border:.5px solid var(--border);border-radius:6px;padding:.45rem .55rem;margin-bottom:.4rem;font-size:11.5px}
+.kcard:last-child{margin-bottom:0}
+.kcard .kn{font-weight:500;color:var(--text);display:block;margin-bottom:2px}
+.kcard .ki{color:var(--muted)}
+.kcard.cancelled{border-color:rgba(232,96,96,.35);background:rgba(232,96,96,.05)}
+.kcard.has-add{border-color:rgba(96,148,232,.35)}
+.ai-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent2);margin-left:4px;vertical-align:middle}
+.ai-dot.off{background:var(--accent5)}
+
+/* BADGES */
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:100px;margin-top:.5rem;margin-right:.3rem}
+.bg-g{background:rgba(96,232,192,.12);color:var(--accent2);border:.5px solid rgba(96,232,192,.25)}
+.bg-r{background:rgba(232,96,96,.12);color:var(--accent3);border:.5px solid rgba(232,96,96,.25)}
+.bg-y{background:rgba(232,240,96,.12);color:var(--accent);border:.5px solid rgba(232,240,96,.25)}
+.bg-b{background:rgba(96,148,232,.12);color:var(--accent4);border:.5px solid rgba(96,148,232,.25)}
+.bg-m{background:rgba(255,255,255,.06);color:var(--muted);border:.5px solid var(--border2)}
+
+/* TAG ROW */
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.tag{font-size:11px;padding:3px 10px;border-radius:100px;background:var(--surface2);border:.5px solid var(--border2);color:var(--muted)}
+
+/* HIGHLIGHT BOX */
+.highlight{background:var(--surface);border-left:2px solid var(--accent);border-radius:0 10px 10px 0;padding:1rem 1.25rem;font-size:13px;color:var(--muted);line-height:1.6;margin-top:1rem}
+.highlight strong{color:var(--text);font-weight:500}
+
+/* DECISION TABLE */
+.dtable{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem;min-width:500px}
+.dtable-wrapper{overflow-x:auto;margin-top:1rem;-webkit-overflow-scrolling:touch}
+.dtable-wrapper::-webkit-scrollbar{height:3px}
+.dtable-wrapper::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.dtable th{text-align:left;padding:.6rem .8rem;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:.5px solid var(--border2);font-weight:500}
+.dtable td{padding:.6rem .8rem;border-bottom:.5px solid var(--border);color:var(--muted);vertical-align:top}
+.dtable tr:last-child td{border-bottom:none}
+.dtable td:first-child{color:var(--text);font-weight:400;width:35%}
+
+/* FOOTER */
+footer{padding:3rem 2rem;border-top:.5px solid var(--border);text-align:center}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.04em;margin-bottom:.5rem}
+.footer-logo em{color:var(--accent);font-style:normal}
+.footer-sub{font-size:12px;color:var(--muted)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner>*{animation:fadeUp .6s ease both}
+.hero-inner>*:nth-child(1){animation-delay:.1s}
+.hero-inner>*:nth-child(2){animation-delay:.2s}
+.hero-inner>*:nth-child(3){animation-delay:.3s}
+.hero-inner>*:nth-child(4){animation-delay:.4s}
+
+@media(max-width:768px){
+  .hero{padding:4rem 1.5rem 3rem}
+  .section{padding:3.5rem 1.5rem}
+  .sec-header{flex-direction:column;gap:.5rem;margin-bottom:2rem}
+  h1{font-size:clamp(2.2rem,11vw,4rem)}
+}
+
+@media(max-width:600px){
+  .chain{flex-direction:column}
+  .chain-arrow{transform:rotate(90deg);justify-content:center;padding:12px 0;opacity:0.5}
+  .hero-stats{gap:1.2rem}
+  .stat-n{font-size:1.6rem}
+  .grid2, .grid3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span></span>Documentação interna · Sistema de IA</div>
+    <h1>Allcance<br><em>IA no Atendimento</em></h1>
+    <p class="hero-desc">Como a inteligência artificial gerencia o atendimento via WhatsApp, orçamentos, ordens de serviço e o kanban da oficina — do primeiro "oi" até a finalização.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n">2</span><span class="stat-l">Cérebros de IA</span></div>
+      <div class="stat"><span class="stat-n">4</span><span class="stat-l">Colunas Kanban</span></div>
+      <div class="stat"><span class="stat-n">100%</span><span class="stat-l">Automação de status</span></div>
+      <div class="stat"><span class="stat-n">0</span><span class="stat-l">Alucinações de OS</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 1. ATENDIMENTO GERAL -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">01</span>
+      <h2>Atendimento geral</h2>
+    </div>
+    <div class="chain">
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">💬</span>
+          <div class="cn-title">Cliente envia</div>
+          <div class="cn-sub">Texto ou áudio via WhatsApp</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">🔗</span>
+          <div class="cn-title">zapi-webhook</div>
+          <div class="cn-sub">Recebe, identifica tipo de mídia</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">🧠</span>
+          <div class="cn-title">Roteador de intenção</div>
+          <div class="cn-sub">OS ativa? Orçamento? Geral?</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">⚡</span>
+          <div class="cn-title">Groq / LLaMA</div>
+          <div class="cn-sub">Resposta natural ao cliente</div>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag">Catálogo completo de bikes e peças</span>
+      <span class="tag">Cálculo de frete Rodonaves</span>
+      <span class="tag">Horário de funcionamento</span>
+      <span class="tag">Contexto do cliente</span>
+      <span class="tag">Áudio → transcrição Whisper</span>
+      <span class="tag">Nunca inventa dados de OS</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. FLUXO DE ORÇAMENTO -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">02</span>
+      <h2>Orçamento via WhatsApp</h2>
+    </div>
+    <div class="chain">
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">🔍</span>
+          <div class="cn-title">Detecta intenção</div>
+          <div class="cn-sub">"Quero fazer um orçamento"</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">👤</span>
+          <div class="cn-title">Coleta dados</div>
+          <div class="cn-sub">Nome → CPF → descrição<br><em style="font-size:11px;color:var(--muted)">Opcional, mas incentivado</em></div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">📸</span>
+          <div class="cn-title">Pede fotos</div>
+          <div class="cn-sub">Só fotos, sem vídeo. Aguarda envio.</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">📋</span>
+          <div class="cn-title">OS criada</div>
+          <div class="cn-sub">Entra em "Em Aprovação" com alerta</div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight"><strong>Timeout automático:</strong> se o cliente não mandar fotos em 15 minutos, a OS é aberta mesmo assim com alerta fullscreen "Novo orçamento" para o atendente.</div>
+  </div>
+</div>
+
+<!-- 3. KANBAN -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">03</span>
+      <h2>Kanban da oficina</h2>
+    </div>
+    <div class="kanban">
+      <div class="kcol">
+        <div class="kcol-head kh-a">Em Aprovação</div>
+        <div class="kcol-body">
+          <div class="kcard has-add"><span class="kn">Specialized Epic<span class="ai-dot"></span></span><span class="ki">João · R$ 390</span></div>
+          <div class="kcard cancelled"><span class="kn">Orçamento</span><span class="ki">Via WhatsApp</span></div>
+        </div>
+      </div>
+      <div class="kcol">
+        <div class="kcol-head kh-m">Em Manutenção</div>
+        <div class="kcol-body">
+          <div class="kcard"><span class="kn">Caloi Carbon<span class="ai-dot"></span></span><span class="ki">Maria · R$ 220</span></div>
+        </div>
+      </div>
+      <div class="kcol">
+        <div class="kcol-head kh-an">Em Análise</div>
+        <div class="kcol-body">
+          <div class="kcard"><span class="kn">Trek Marlin<span class="ai-dot off"></span></span><span class="ki">Pedro · pausado</span></div>
+        </div>
+      </div>
+      <div class="kcol">
+        <div class="kcol-head kh-p">Pronto</div>
+        <div class="kcol-body">
+          <div class="kcard"><span class="kn">Giant Trance<span class="ai-dot"></span></span><span class="ki">Ana · Quitado</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.2rem">
+      <div style="display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent2);display:block"></span>IA ativa</div>
+      <div style="display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent5);display:block"></span>IA pausada</div>
+      <div style="display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent3);display:block"></span>OS cancelada</div>
+      <div style="display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted)"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent4);display:block"></span>Adicional pendente</div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:.75rem">Clique no card → modal de controles. OS canceladas ficam visíveis com overlay vermelho e opção de retirar ou excluir.</p>
+  </div>
+</div>
+
+<!-- 4. ADICIONAL -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">04</span>
+      <h2>Serviço adicional</h2>
+    </div>
+    <div class="chain" style="margin-bottom:1.5rem">
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">🔧</span>
+          <div class="cn-title">Atendente envia</div>
+          <div class="cn-sub">Descrição + valor + peças</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">📱</span>
+          <div class="cn-title">IA formata e envia</div>
+          <div class="cn-sub">WhatsApp bonito para o cliente</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">🎯</span>
+          <div class="cn-title">Classifica resposta</div>
+          <div class="cn-sub">APROVACAO / NEGACAO /<br>CANCELAMENTO / DUVIDA</div>
+        </div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item">
+        <div class="chain-node">
+          <span class="icon">⚙️</span>
+          <div class="cn-title">Ação automática</div>
+          <div class="cn-sub">Atualiza OS + dispara alerta</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><div class="dot dot-g"></div><h3>Aprovado</h3></div>
+        <div class="row"><div class="dot dot-g" style="margin-top:5px"></div><p>Status → aprovado, valor somado ao total</p></div>
+        <div class="row"><div class="dot dot-g" style="margin-top:5px"></div><p>IA confirma ao cliente e continua informando status normalmente</p></div>
+        <div><span class="badge bg-g">IA continua ativa</span></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-o"></div><h3>Negado</h3></div>
+        <div class="row"><div class="dot dot-o" style="margin-top:5px"></div><p>Status → negado, avisa que o serviço inicial continua</p></div>
+        <div class="row"><div class="dot dot-o" style="margin-top:5px"></div><p>Continua informando status — não passa para humano</p></div>
+        <div><span class="badge bg-y">IA continua ativa</span></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-b"></div><h3>Cancelamento parcial</h3></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>IA pergunta: só o extra ou o serviço todo?</p></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>Aguarda resposta antes de agir. Se adicional já cancelado, vai direto para total.</p></div>
+        <div><span class="badge bg-b">Aguarda confirmação</span></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-r"></div><h3>Cancelamento total</h3></div>
+        <div class="row"><div class="dot dot-r" style="margin-top:5px"></div><p>OS → cancelada, overlay vermelho no card</p></div>
+        <div class="row"><div class="dot dot-r" style="margin-top:5px"></div><p>Alerta fullscreen. IA para completamente nessa conversa.</p></div>
+        <div><span class="badge bg-r">IA desativada</span><span class="badge bg-m">100% humano</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. NOTIFICAÇÕES -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">05</span>
+      <h2>Notificações automáticas</h2>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><div class="dot dot-b"></div><h3>Avanços de card</h3></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>→ Na Mecânica: "sua bike já está na oficina"</p></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>→ Em Manutenção: "manutenção começou"</p></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>→ Em Análise: "serviço concluído, análise final"</p></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>→ Pronto: "bike pronta para retirada"</p></div>
+        <div class="row"><div class="dot dot-g" style="margin-top:5px"></div><p>→ Finalização: mensagem de agradecimento</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-g"></div><h3>Respostas reativas</h3></div>
+        <div class="row"><div class="dot dot-g" style="margin-top:5px"></div><p>Se cliente pergunta qualquer coisa com OS ativa → IA responde com status atual</p></div>
+        <div class="row"><div class="dot dot-m" style="margin-top:5px"></div><p>Perguntas sobre produto, frete ou vendas → vai para atendimento geral normalmente</p></div>
+        <div class="row"><div class="dot dot-o" style="margin-top:5px"></div><p>2+ bikes ativas → IA pergunta sobre qual bike antes de responder</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. CONTROLES -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">06</span>
+      <h2>Controles manuais</h2>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="card-head"><div class="dot dot-b"></div><h3>Enviar status agora</h3></div>
+        <div class="row"><p style="color:var(--muted)">Dispara mensagem de status atual para o cliente via WhatsApp sem esperar ele perguntar</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-g"></div><h3>Aprovar manualmente</h3></div>
+        <div class="row"><p style="color:var(--muted)">Aprovação presencial: IA avisa o cliente que o adicional foi aprovado e soma o valor na OS</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-o"></div><h3>Pausar / Retomar IA</h3></div>
+        <div class="row"><p style="color:var(--muted)">Toggle direto na conversa do cliente. Indicador visual no card (verde / âmbar)</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-b"></div><h3>Devolver para IA</h3></div>
+        <div class="row"><p style="color:var(--muted)">Após atendimento humano, reativa a IA e limpa flags de human_takeover</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-m"></div><h3>Log de mensagens</h3></div>
+        <div class="row"><p style="color:var(--muted)">Últimas 3 mensagens enviadas pela IA visíveis no modal do card</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-y"></div><h3>Alertas fullscreen</h3></div>
+        <div class="row"><p style="color:var(--muted)">Aprovado, negado, cancelado, novo orçamento. Persiste via localStorage até interação.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. REGRAS DA IA -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">07</span>
+      <h2>Quando a IA age e quando para</h2>
+    </div>
+    <div class="dtable-wrapper">
+      <table class="dtable">
+        <thead>
+          <tr>
+            <th>Situação</th>
+            <th>IA faz o quê?</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sem OS ativa, cliente fala qualquer coisa</td>
+            <td>Atendimento geral — catálogo, frete, dúvidas</td>
+            <td><span class="badge bg-g">Ativa</span></td>
+          </tr>
+          <tr>
+            <td>OS ativa, cliente manda mensagem</td>
+            <td>Responde com status atual da bike</td>
+            <td><span class="badge bg-g">Ativa</span></td>
+          </tr>
+          <tr>
+            <td>Adicional pendente</td>
+            <td>Aguarda e classifica resposta do cliente</td>
+            <td><span class="badge bg-b">Aguardando</span></td>
+          </tr>
+          <tr>
+            <td>Cliente aprova adicional</td>
+            <td>Confirma, soma valor, continua informando status</td>
+            <td><span class="badge bg-g">Ativa</span></td>
+          </tr>
+          <tr>
+            <td>Cliente nega adicional</td>
+            <td>Informa que só o inicial será feito, continua status</td>
+            <td><span class="badge bg-g">Ativa</span></td>
+          </tr>
+          <tr>
+            <td>Cliente cancela a OS inteira</td>
+            <td>Para completamente. Nunca mais responde nessa conversa.</td>
+            <td><span class="badge bg-r">Desativada</span></td>
+          </tr>
+          <tr>
+            <td>Atendente pausa manualmente</td>
+            <td>Silêncio total naquela conversa</td>
+            <td><span class="badge bg-r">Pausada</span></td>
+          </tr>
+          <tr>
+            <td>Nova OS aberta no mesmo número</td>
+            <td>IA reinicia do zero para aquele cliente</td>
+            <td><span class="badge bg-g">Reativada</span></td>
+          </tr>
+          <tr>
+            <td>OS sem número de WhatsApp</td>
+            <td>Não age — apenas atendente gerencia</td>
+            <td><span class="badge bg-m">Inativa</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 8. HISTÓRICO E DRE -->
+<div class="section">
+  <div class="inner">
+    <div class="sec-header">
+      <span class="sec-num">08</span>
+      <h2>Histórico e financeiro</h2>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><div class="dot dot-m"></div><h3>Histórico de mecânicos</h3></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>Todos os atendimentos agrupados por bike</p></div>
+        <div class="row"><div class="dot dot-r" style="margin-top:5px"></div><p>OS canceladas: tag vermelha, sem mecânico vinculado, sem valor contabilizado</p></div>
+        <div class="row"><div class="dot dot-m" style="margin-top:5px"></div><p>Modal central com dados completos do cliente e histórico da bike</p></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="dot dot-g"></div><h3>DRE e pagamentos</h3></div>
+        <div class="row"><div class="dot dot-g" style="margin-top:5px"></div><p>Aprovações somam ao total da OS automaticamente</p></div>
+        <div class="row"><div class="dot dot-r" style="margin-top:5px"></div><p>Cancelamentos: vendas marcadas como "cancelled" — não entram no DRE</p></div>
+        <div class="row"><div class="dot dot-b" style="margin-top:5px"></div><p>Pagamentos parciais, descontos e recibos registrados no histórico completo</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Allcance <em>Bikes</em></div>
+    <div class="footer-sub">Sistema de IA para atendimento e oficina · Documentação interna</div>
+  </div>
+</footer>
+
+</body>
+</html>

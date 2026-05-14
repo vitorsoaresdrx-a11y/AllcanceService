@@ -1,0 +1,42 @@
+project_id = "qqgixgogfmgluebsiqrp"
+
+[functions.zapi-send-message]
+verify_jwt = false
+
+[functions.zapi-webhook]
+verify_jwt = false
+
+[functions.zapi-status]
+verify_jwt = false
+
+[functions.ai-responder]
+verify_jwt = false
+
+[functions.station-login]
+verify_jwt = false
+
+[functions.zapi-health-check]
+verify_jwt = false
+
+[functions.cleanup-db]
+enabled = true
+verify_jwt = true
+import_map = "./functions/cleanup-db/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/cleanup-db/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/cleanup-db/*.html" ]
+
+[functions.calcular-frete-rodonaves]
+enabled = true
+verify_jwt = false
+import_map = "./functions/calcular-frete-rodonaves/deno.json"
+entrypoint = "./functions/calcular-frete-rodonaves/index.ts"
+
+[functions.mercadopago-checkout]
+verify_jwt = false
+
+[functions.mercadopago-webhook]
+verify_jwt = false

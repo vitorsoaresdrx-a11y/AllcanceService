@@ -1,0 +1,1 @@
+﻿CREATE TABLE IF NOT EXISTS os_pagamentos (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), os_id UUID REFERENCES mechanic_jobs(id) ON DELETE CASCADE, tipo TEXT CHECK (tipo IN ('integral', 'parcial', 'nenhum')), valor_total DECIMAL(12,2), valor_pago DECIMAL(12,2), valor_restante DECIMAL(12,2), criado_em TIMESTAMPTZ DEFAULT now());

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Frete | Allcance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            </div>
+            <div class="header-text">
+                <h1>Simulador de Frete</h1>
+                <p>Uso Interno — Rodonaves (Base Local)</p>
+            </div>
+        </header>
+
+        <main class="grid-layout">
+            <!-- CARD 1 - DESTINO -->
+            <section class="card">
+                <div class="card-header">
+                    <div class="pin-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </div>
+                    <h3 class="label-uppercase">1. Destino</h3>
+                </div>
+
+                <div class="toggle-segmented">
+                    <button class="toggle-btn active" data-tab="cep">Por CEP</button>
+                    <button class="toggle-btn" data-tab="cidade">Por Cidade</button>
+                </div>
+
+                <div class="input-group" id="cep-section">
+                    <label class="field-label">CEP DE DESTINO</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="cep-input" placeholder="00000-000" maxlength="9">
+                        <div class="field-spinner" id="cep-loader"></div>
+                    </div>
+                    <div class="row-fields">
+                        <div class="field">
+                            <label class="field-label">CIDADE</label>
+                            <input type="text" id="cidade-display" readonly placeholder="---">
+                        </div>
+                        <div class="field">
+                            <label class="field-label">UF</label>
+                            <input type="text" id="uf-display" readonly placeholder="---">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CARD 2 - PRODUTO -->
+            <section class="card">
+                <div class="card-header">
+                    <div class="box-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <h3 class="label-uppercase">2. Produto</h3>
+                </div>
+
+                <div class="toggle-segmented">
+                    <button class="toggle-btn active" data-product="sistema">Sistema</button>
+                    <button class="toggle-btn" data-product="manual">Manual</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="field-label">VALOR DA BIKE (R$)</label>
+                    <div class="price-input-wrapper">
+                        <span class="currency-prefix">R$</span>
+                        <input type="text" id="bike-value" placeholder="0,00">
+                    </div>
+                </div>
+
+                <div class="volume-selector">
+                    <label class="field-label">TIPO DE VOLUME</label>
+                    <div class="volume-grid">
+                        <div class="volume-card active" data-type="quadro">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                            <span>QUADRO (6KG)</span>
+                        </div>
+                        <div class="volume-card" data-type="bike">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><polyline points="15 6 10 6 6 10 3 10"></polyline><polyline points="19 17.5 19 10 14 10 14 14.5"></polyline><polyline points="12 17.5 12 14"></polyline></svg>
+                            <span>BIKE COMPLETA (15,5KG)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <button id="btn-calculate" class="btn-primary">
+            <span id="btn-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="16" y1="18" x2="16" y2="18"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="12" y1="18" x2="12" y2="18"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line></svg>
+            </span>
+            <span id="btn-text">CALCULAR FRETE OFICIAL</span>
+        </button>
+
+        <div id="result-container" class="result-card hidden">
+            <div class="result-header">
+                <div class="badge-quote">✓ COTAÇÃO GARANTIDA</div>
+                <div class="prazo-box">
+                    <span class="label">PRAZO ESTIMADO</span>
+                    <div class="val-group">
+                        <span class="val-large" id="res-prazo">25</span>
+                        <span class="val-unit">Dias úteis</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="res-location" class="display-location">BOA VISTA — RR</h2>
+            
+            <hr class="separator">
+
+            <div class="costs-layout">
+                <div class="costs-grid">
+                    <div class="cost-item">
+                        <span class="cost-label">FRETE PESO</span>
+                        <span class="cost-val" id="res-frete-peso">R$ 1.100,00</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">TAXA GRIS</span>
+                        <span class="cost-val" id="res-gris">R$ 50,00</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">TAXA TAS</span>
+                        <span class="cost-val" id="res-tas">R$ 11,63</span>
+                    </div>
+                    <div class="cost-item">
+                        <span class="cost-label">PEDÁGIO</span>
+                        <span class="cost-val" id="res-pedagio">R$ 8,89</span>
+                    </div>
+                </div>
+
+                <div class="total-highlight">
+                    <span class="total-label">VALOR FINAL SUGERIDO</span>
+                    <div class="total-val-group">
+                        <span class="total-currency">R$</span>
+                        <span class="total-amount" id="res-total">1.280</span>
+                    </div>
+                    <span class="subtotal-raw" id="res-subtotal">Subtotal Real: R$ 1.247,90</span>
+                </div>
+            </div>
+
+            <footer class="result-footer">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="8"></line></svg>
+                <span>Valor estimado com base no peso cubado padrão (38.48kg). Confirmar na emissão do CT-e.</span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+ALTER PUBLICATION supabase_realtime ADD TABLE
+  customers,
+  sales,
+  sale_items,
+  mechanic_jobs,
+  mechanic_job_additions,
+  mechanics,
+  cash_registers,
+  cash_register_sales,
+  stock_changes,
+  quotes,
+  quote_items,
+  fixed_expenses,
+  variable_expenses,
+  categories,
+  bike_model_parts,
+  settings;
